@@ -8,22 +8,22 @@ function SideBar() {
   const [userlogin, setUserLogin] = useState();
 
   useEffect(() => {
-    fetch(`http://localhost:5050/users?phone=${cookies.phone}`, {
+    fetch(`http://localhost:5050/users/profile/user`, {
       method: "GET",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Bearer " + cookies.user_token,
+        Authorization: "Bearer " + cookies.admin_token,
       },
     })
       .then((res) => res.json())
       .then((res) => {
-        if (res && res.data && res.data.length > 0) {
-          const firstObject = res.data[0];
+        if (res && res.data) {
+          const firstObject = res.data;
           setUserLogin(firstObject);
         }
       });
-  }, [cookies.phone]);
+  }, [cookies.admin_token]);
 
   //console.log(userlogin);
   return (
@@ -143,26 +143,17 @@ function SideBar() {
               </NavLink>
             </Accordion.Item>
             <Accordion.Item eventKey="4">
-              <NavLink to="/orderConfirmation" end>
+              <NavLink to="/order" end>
                 <Accordion.Header>
                   <i class="fas fa-shopping-cart"></i>&nbsp;
                   <p style={{ height: "0rem" }} className="hidenText">
-                    Xác nhận đặt hàng
+                    Quản lý đơn hàng
                   </p>
                 </Accordion.Header>
               </NavLink>
             </Accordion.Item>
+
             <Accordion.Item eventKey="5">
-              <NavLink to="/paymentConfirmation" end>
-                <Accordion.Header>
-                  <i class="fas fa-money-check"></i>&nbsp;
-                  <p style={{ height: "0rem" }} className="hidenText">
-                    Xác nhận pay
-                  </p>
-                </Accordion.Header>
-              </NavLink>
-            </Accordion.Item>
-            <Accordion.Item eventKey="6">
               <NavLink to="/Revenue" end>
                 <Accordion.Header>
                   <i class="fas fa-money-check-alt"></i>&nbsp;

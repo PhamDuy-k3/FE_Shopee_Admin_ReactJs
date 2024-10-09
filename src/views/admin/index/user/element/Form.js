@@ -35,7 +35,7 @@ function Form({ title, isUpdate = false }) {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: "Bearer " + cookies.user_token,
+          Authorization: "Bearer " + cookies.admin_token,
         },
       })
         .then((res) => res.json())
@@ -53,7 +53,6 @@ function Form({ title, isUpdate = false }) {
   const urlApiUpdateUser = `http://localhost:5050/users/${urlUpdate.userId}`;
 
   const CreatUpdateuser = (data, method, urlApi, success, error) => {
-
     const formData = new FormData();
     if (data.name) {
       formData.append("name", data.name);
@@ -82,6 +81,7 @@ function Form({ title, isUpdate = false }) {
     if (data.avatar && data.avatar.length > 0) {
       formData.append("avatar", data.avatar[0]);
     }
+    formData.append("isVerified", true);
 
     // Chú ý: data.avatar là một mảng, chúng ta cần lấy phần tử đầu tiên
     console.log(formData);
@@ -90,7 +90,7 @@ function Form({ title, isUpdate = false }) {
       body: formData,
       headers: {
         Accept: "application/json",
-        Authorization: "Bearer " + cookies.user_token,
+        Authorization: "Bearer " + cookies.admin_token,
       },
     })
       .then((res) => res.json())

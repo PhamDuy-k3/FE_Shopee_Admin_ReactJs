@@ -25,14 +25,13 @@ export function Index() {
       .then((res) => res.json())
       .then((res) => {
         if (res.user_token) {
-          setCookie("user_token", res.user_token, {
+          setCookie("admin_token", res.user_token, {
             path: "/",
             // path: "/", Điều này chỉ định rằng cookie có sẵn trên tất cả các đường dẫn trong trang web.
             expires: moment().add(1, "months").toDate(),
           });
           setCookie("phone", data.phone, {
             path: "/",
-            // path: "/", Điều này chỉ định rằng cookie có sẵn trên tất cả các đường dẫn trong trang web.
             expires: moment().add(1, "months").toDate(),
           });
           navigate("/");

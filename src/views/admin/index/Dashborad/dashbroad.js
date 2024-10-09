@@ -10,7 +10,6 @@ function Dashboard() {
   const [listProducts, setListProducts] = useState([]);
   const [cartsOder, setCartsOder] = useState([]);
   const [status, setStatus] = useState("unconfirmed");
-  const [statusCf, setStatusCf] = useState("confirmed");
   const [revenue, setRevenue] = useState([]);
 
   const fetchData = async (url, setState) => {
@@ -20,7 +19,7 @@ function Dashboard() {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: "Bearer " + cookies.user_token,
+          Authorization: "Bearer " + cookies.admin_token,
         },
       });
       const data = await response.json();
@@ -34,13 +33,10 @@ function Dashboard() {
     fetchData(`http://localhost:5050/users?limit=${limit}`, setListUser);
     fetchData(`http://localhost:5050/Products?limit=${limit}`, setListProducts);
     fetchData(
-      `http://localhost:5050/cartsOder/?id_user_oder=${cookies.id_user}&status=${status}`,
+      `http://localhost:5050/cartsOder/?status=${status}`,
       setCartsOder
     );
-    fetchData(
-      `http://localhost:5050/cartsOder/?id_user_oder=${cookies.id_user}&status=delivered`,
-      setRevenue
-    );
+    fetchData(`http://localhost:5050/cartsOder/?status=delivered`, setRevenue);
   }, []);
 
   console.log(revenue);
@@ -58,13 +54,13 @@ function Dashboard() {
   return (
     <div className="content-wraper content-wraper0">
       <div className="content-wraper-header d-lg-flex">
-        <h2>Dashboard</h2>
+        <h2>Thống kê</h2>
         <div className="d-flex content-wraper-header-cl2">
           <a href="">
             <p style={{ color: "#0A58CA" }}>Home</p>
           </a>
           <p>/</p>
-          <p className="gray">Dashboard v1</p>
+          <p className="gray">Thống kê</p>
         </div>
       </div>
       <div className="content">
@@ -78,7 +74,7 @@ function Dashboard() {
                     <p>Số sản phẩm</p>
                   </div>
                   <div className="inner-icon">
-                  <i class="fab fa-product-hunt"></i>
+                    <i class="fab fa-product-hunt"></i>
                   </div>
                 </div>
                 <a href="">

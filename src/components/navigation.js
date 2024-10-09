@@ -37,14 +37,22 @@ function Navigation() {
   };
   const logout = (e) => {
     e.preventDefault();
-    removeCookies("user_token");
+    removeCookies("admin_token");
     removeCookies("phone");
     navigate("/auth/login");
   };
   const fetchCartsOder = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5050/cartsOder/?id_user_oder=${cookies.id_user}&status=${status}`
+        `http://localhost:5050/cartsOder/?id_user_oder=${cookies.id_user}&status=${status}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + cookies.admin_token,
+          },
+        }
       );
       const data = await response.json();
       setLengthCartsOder(data.data.length);
@@ -148,7 +156,7 @@ function Navigation() {
         </li>
         <li>
           <i className="far fa-bell"></i>
-          <NavLink to="/orderConfirmation">
+          <NavLink to="/order">
             <div className="tb">
               <p>{lengthCartsOder}</p>
             </div>
