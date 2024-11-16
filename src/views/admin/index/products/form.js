@@ -4,7 +4,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { useCookies } from "react-cookie";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import SizeComponet from "./size";
 
 function FormProduct({ title, isUpdate = false }) {
   const [cookies, setCookie] = useCookies();
@@ -13,12 +12,14 @@ function FormProduct({ title, isUpdate = false }) {
   const urlUpdate = useParams();
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     setError,
     setValue,
+    watch,
   } = useForm({
     // giá trị mặc định cho data
     defaultValues: {
@@ -27,9 +28,9 @@ function FormProduct({ title, isUpdate = false }) {
       discount: "",
       category_id: "",
       brand_id: "",
-      image: "",
+      images: [],
+      videos: [],
       stock: 1,
-      sizes: [],
     },
   });
   // gán giá trị cho form cập nhật
@@ -78,14 +79,14 @@ function FormProduct({ title, isUpdate = false }) {
     if (data.stock) {
       formData.append("stock", data.stock);
     }
-    if (data.sizes && Array.isArray(data.sizes)) {
-      data.sizes.forEach((size) => {
-        formData.append("sizes", size);
-      });
-    }
-    if (data.image && data.image.length > 0) {
-      formData.append("image", data.image[0]);
-    }
+
+    Array.from(data.images).forEach((file) => {
+      formData.append("images", file);
+    });
+    Array.from(data.videos).forEach((file) => {
+      formData.append("videos", file);
+    });
+
     // Chú ý: data.avatar là một mảng, chúng ta cần lấy phần tử đầu tiên
 
     fetch(urlApi, {
@@ -110,7 +111,6 @@ function FormProduct({ title, isUpdate = false }) {
   };
   //Thêm Product
   const createProduct = (data) => {
-    console.log(data);
     CreatUpdateProduct(
       data,
       "POST",
@@ -227,6 +227,7 @@ function FormProduct({ title, isUpdate = false }) {
           </div>
 
           {/* prices */}
+
           <div className="pricesProduct mt-2">
             <label htmlFor="Prices">
               Giá sản phẩm <i className="fas fa-star-of-life"></i>
@@ -269,15 +270,38 @@ function FormProduct({ title, isUpdate = false }) {
               type="file"
               id="Image"
               name="image"
+              multiple
               {...register(
-                "image",
+                "images",
                 !isUpdate && {
                   required: "Vui lòng chọn ảnh!",
                 }
               )}
             />
-            {errors.image && (
-              <p className={"text-danger fw-bold"}>{errors.image.message}</p>
+            {errors.images && (
+              <p className={"text-danger fw-bold"}>{errors.images.message}</p>
+            )}
+          </div>
+          {/* videos */}
+          <div className="mt-3">
+            <label htmlFor="formFile" className="form-label">
+              <label htmlFor="Videos">Videos sản phẩm</label>
+            </label>
+            <input
+              className="form-control"
+              type="file"
+              id="Videos"
+              name="videos"
+              multiple
+              {...register(
+                "videos",
+                !isUpdate && {
+                  required: "Vui lòng chọn video!",
+                }
+              )}
+            />
+            {errors.videos && (
+              <p className={"text-danger fw-bold"}>{errors.videos.message}</p>
             )}
           </div>
           {/* categorie */}
@@ -320,16 +344,7 @@ function FormProduct({ title, isUpdate = false }) {
               <p className={"text-danger fw-bold"}>{errors.brand_id.message}</p>
             )}
           </div>
-          {/* size */}
-          <div className=" size mt-2">
-            <label htmlFor="Size">Size</label> <br></br>
-            <SizeComponet
-              register={register}
-              setValue={setValue}
-              errors={errors}
-              isUpdate={isUpdate}
-            />
-          </div>
+
           {/* stock */}
           <div className="pricesProduct mt-2">
             <label htmlFor="Prices">
